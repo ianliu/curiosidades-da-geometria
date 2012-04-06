@@ -46,74 +46,83 @@ class OrthicTriangle extends Sprite
   var h5:Handle;
   var h6:Handle;
 
-  var btn1:ToggleButton;
-  var btn2:ToggleButton;
-  var btn3:ToggleButton;
-  var label:Label;
+  var showHeights : ToggleButton;
+  var maxHeightLabel : Label;
+  var currentHeightLabel : Label;
 
   public function new() {
     super();
-    var s = "";
-    s += "A reta é desenhada ligando o Circuncentro com o Ortocentro,\n";
-    s += "não dependendo do Baricentro, o que prova a reta de Euler!";
-
-    btn1 = new ToggleButton("Esconder medianas");
-    btn2 = new ToggleButton("Esconder alturas");
-    btn3 = new ToggleButton("Esconder mediatrizes");
-    label = new Label(s);
 
     h1 = new Handle();
     h2 = new Handle();
     h3 = new Handle();
+    h4 = new Handle();
+    h5 = new Handle();
+    h6 = new Handle();
 
-    h1.onMove = onMove;
-    h2.onMove = onMove;
-    h3.onMove = onMove;
+    h1.onMove = onOutterMove;
+    h2.onMove = onOutterMove;
+    h3.onMove = onOutterMove;
+    h4.onMove = onInnerMove;
+    h5.onMove = onInnerMove;
+    h6.onMove = onInnerMove;
+
+    showHeights = new ToggleButton("Mostrar alturas");
+    maxHeightLabel = new Label("");
+    currentHeightLabel = new Label("");
 
     addChild(h1);
     addChild(h2);
     addChild(h3);
-    addChild(btn1);
-    addChild(btn2);
-    addChild(btn3);
-    addChild(label);
+    addChild(h4);
+    addChild(h5);
+    addChild(h6);
+    addChild(showHeights);
+    addChild(maxHeightLabel);
+    addChild(currentHeightLabel);
 
-    btn1.addEventListener("toggled", redraw);
-    btn2.addEventListener("toggled", redraw);
-    btn3.addEventListener("toggled", redraw);
+    showHeights.addEventListener("toggled", redraw);
     EulerLine.stage.addEventListener(Event.RESIZE, reposition);
 
-    h1.x = 100;
-    h1.y = 100;
-    h2.x = 200;
-    h2.y = 100;
-    h3.x = 150;
-    h3.y = 200;
-    btn1.y = 10;
-    btn2.y = 40;
-    btn3.y = 70;
+    h1.x = 100; h1.y = 100;
+    h2.x = 200; h2.y = 100;
+    h3.x = 150; h3.y = 200;
+    showHeights.y = 10;
+    maxHeightLabel.y = 40;
+    currentHeightLabel.y = 70;
 
     reposition(null);
 
     draw(graphics);
   }
 
-  public function reposition(e) {
-    var width = EulerLine.stage.stageWidth;
-    var height = EulerLine.stage.stageHeight;
-    label.y = height-label.height;
-    label.x = (width-label.width)/2;
-    var max = (btn1.width > btn2.width)? btn1.width:btn2.width;
-    if (btn3.width > max) max = btn3.width;
-    btn1.x = width-max-10;
-    btn2.x = width-max-10;
-    btn3.x = width-max-10;
+  function maxWidth(list:Array<flash.display.DisplayObject>) {
+    var max:Float = 0;
+
+    for (w in list)
+      if (w.width > max)
+        max = w.width;
+
+    return max;
   }
 
-  public function onMove(e:HandleEvent) {
+  public function reposition(e) {
+    var width = OrthicTriangle.stage.stageWidth;
+    var height = OrthicTriangle.stage.stageHeight;
+    var max = maxWidth([maxHeightLabel, showHeights, currentHeightLabel]);
+    maxHeightLabel.x = width - max - 10;
+    showHeights.x = width - max - 10;
+    currentHeightLabel.x = width - max - 10;
+  }
+
+  public function onOutterMove(e:HandleEvent) {
     e.target.x = e.x;
     e.target.y = e.y;
     draw(graphics);
+  }
+
+  public function onInnerMove(e:HandleEvent) {
+
   }
 
   public function redraw(e) {
