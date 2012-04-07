@@ -3,9 +3,15 @@ class Vector
 {
   public var x:Float;
   public var y:Float;
+
   public function new(x:Float, y:Float) {
     this.x = x;
     this.y = y;
+  }
+
+  public inline function proj(v:Vector) {
+    var s = v.dot(this) / v.dot(v);
+    return v.mult(s);
   }
 
   public inline function dot(v:Vector) {
