@@ -20,6 +20,7 @@
  * Boston, MA  02110-1301  USA
  */
 
+import Handle;
 import flash.display.Sprite;
 import flash.display.Graphics;
 import flash.display.StageAlign;
@@ -82,7 +83,7 @@ class OrthicTriangle extends Sprite
     addChild(currentHeightLabel);
 
     showHeights.addEventListener("toggled", redraw);
-    EulerLine.stage.addEventListener(Event.RESIZE, reposition);
+    OrthicTriangle.stage.addEventListener(Event.RESIZE, reposition);
 
     h1.x = 100; h1.y = 100;
     h2.x = 200; h2.y = 100;
@@ -96,7 +97,7 @@ class OrthicTriangle extends Sprite
     draw(graphics);
   }
 
-  function maxWidth(list:Array<flash.display.DisplayObject>) {
+  function maxWidth(list:Array<Dynamic>) {
     var max:Float = 0;
 
     for (w in list)
@@ -130,57 +131,6 @@ class OrthicTriangle extends Sprite
   }
 
   public function draw(g:Graphics) {
-    var v1 = new Vector(h1.x, h1.y);
-    var v2 = new Vector(h2.x, h2.y);
-    var v3 = new Vector(h3.x, h3.y);
-    var t = new Triangle(v1, v2, v3);
-    var bc = t.barycenter();
-    var oc = t.orthocenter();
-    var cc = t.circumcenter();
-    var med = t.medians();
-    g.clear();
-    g.lineStyle(0);
-    g.moveTo(v1.x, v1.y);
-    g.lineTo(v2.x, v2.y);
-    g.lineTo(v3.x, v3.y);
-    g.lineTo(v1.x, v1.y);
-
-    if (!btn1.toggled) {
-      g.lineStyle(0, 0xFF0000);
-      g.moveTo(v1.x, v1.y);
-      g.lineTo(bc.x, bc.y);
-      g.lineTo(v2.x, v2.y);
-      g.moveTo(v3.x, v3.y);
-      g.lineTo(bc.x, bc.y);
-    }
-
-    if (!btn2.toggled) {
-      g.lineStyle(0, 0xCC00);
-      g.moveTo(v1.x, v1.y);
-      g.lineTo(oc.x, oc.y);
-      g.lineTo(v2.x, v2.y);
-      g.moveTo(v3.x, v3.y);
-      g.lineTo(oc.x, oc.y);
-    }
-
-    if (!btn3.toggled) {
-      g.lineStyle(0, 0xFF);
-      g.moveTo(med[0].x, med[0].y);
-      g.lineTo(cc.x, cc.y);
-      g.lineTo(med[1].x, med[1].y);
-      g.moveTo(med[2].x, med[2].y);
-      g.lineTo(cc.x, cc.y);
-    }
-
-    g.lineStyle(0, 0xFF8800);
-    g.moveTo(oc.x, oc.y);
-    g.lineTo(cc.x, cc.y);
-
-    g.lineStyle(0);
-    g.drawCircle(bc.x, bc.y, 3);
-    g.drawCircle(oc.x, oc.y, 3);
-    g.drawCircle(cc.x, cc.y, 3);
-    g.drawCircle(cc.x, cc.y, v1.minus(cc).length());
   }
 }
 

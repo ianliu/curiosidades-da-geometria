@@ -9,6 +9,8 @@ typedef HandleEvent = {
 
 class Handle extends Sprite
 {
+  static var stage = flash.Lib.current.stage;
+
   public function new() {
     super();
     buttonMode = true;
@@ -19,6 +21,28 @@ class Handle extends Sprite
     addEventListener(MouseEvent.MOUSE_DOWN, onPress);
   }
 
+  public function constrain(h1:Handle, h2:Handle) {
+    this.onMove = function (e) {
+      var p:Vector;
+      var mouse = new Vector(e.x, e.y);
+      var v1 = new Vector(h1.x, h1.y);
+      var v2 = new Vector(h2.x, h2.y);
+      var u = v2.minus(v1);
+      var v = mouse.minus(v1);
+      var w = mouse.minus(v2);
+
+      if (v.dot(u) < 0)
+        p = v1;
+      else if (w.dot(u) > 0)
+        p = v2;
+      else
+        p = v1.plus(v.proj(u));
+
+      e.target.x = p.x;
+      e.target.y = p.y;
+    }
+  }
+
   public dynamic function onMove(e) { }
 
   private function onMouseMove(e) {
@@ -26,12 +50,12 @@ class Handle extends Sprite
   }
 
   private function onPress(e) {
-    EulerLine.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-    EulerLine.stage.addEventListener(MouseEvent.MOUSE_UP, onRelease);
+    Handle.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+    Handle.stage.addEventListener(MouseEvent.MOUSE_UP, onRelease);
   }
 
   private function onRelease(e) {
-    EulerLine.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-    EulerLine.stage.removeEventListener(MouseEvent.MOUSE_UP, onRelease);
+    Handle.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+    Handle.stage.removeEventListener(MouseEvent.MOUSE_UP, onRelease);
   }
 }

@@ -9,9 +9,13 @@ class Vector
     this.y = y;
   }
 
+  public inline function mag2() {
+    return x*x + y*y;
+  }
+
   public inline function proj(v:Vector) {
-    var s = v.dot(this) / v.dot(v);
-    return v.mult(s);
+    var s = dot(v) / mag2();
+    return mult(s);
   }
 
   public inline function dot(v:Vector) {
