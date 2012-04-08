@@ -9,7 +9,7 @@ class Label extends TextField
   public function new(label:String) {
     super();
     this.label = label;
-    format = new TextFormat("Verdana", 11);
+    format = new TextFormat("Verdana", 14);
     autoSize = TextFieldAutoSize.LEFT;
     multiline = true;
     selectable = false;
