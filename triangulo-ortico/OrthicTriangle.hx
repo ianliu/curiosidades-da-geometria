@@ -31,12 +31,6 @@ class OrthicTriangle extends Sprite
 {
   public static var stage = flash.Lib.current.stage;
 
-  static function main() {
-    stage.align = StageAlign.TOP_LEFT;
-    stage.scaleMode = StageScaleMode.NO_SCALE;
-    flash.Lib.current.addChild(new OrthicTriangle());
-  }
-
   var minPerimeter:Float;
 
   // Triangulo de fora
@@ -56,13 +50,15 @@ class OrthicTriangle extends Sprite
   public function new() {
     super();
 
-    minPerimeter = 0;
     h1 = new Handle();
     h2 = new Handle();
     h3 = new Handle();
     h4 = new Handle(0xff0000, 4);
     h5 = new Handle(0x00ff00, 4);
     h6 = new Handle(0x0000ff, 4);
+    showHeights = new ToggleButton("Mostrar alturas");
+    minPerimeterLabel = new Label("");
+    currentPerimeterLabel = new Label("");
 
     h1.onMove = onOutterMove;
     h2.onMove = onOutterMove;
@@ -70,57 +66,42 @@ class OrthicTriangle extends Sprite
     h4.constrain(h1, h2);
     h5.constrain(h2, h3);
     h6.constrain(h3, h1);
-    h4.addEventListener("move", redraw);
-    h5.addEventListener("move", redraw);
-    h6.addEventListener("move", redraw);
-
-    showHeights = new ToggleButton("Mostrar alturas");
-    minPerimeterLabel = new Label("Perímetro máxima: ");
-    currentPerimeterLabel = new Label("Perímetro atual: ");
-
-    addChild(h1);
-    addChild(h2);
-    addChild(h3);
-    addChild(h4);
-    addChild(h5);
-    addChild(h6);
-    addChild(showHeights);
-    addChild(minPerimeterLabel);
-    addChild(currentPerimeterLabel);
-
+    h4.addEventListener("move", innerMoved);
+    h5.addEventListener("move", innerMoved);
+    h6.addEventListener("move", innerMoved);
     showHeights.addEventListener("toggled", redraw);
     OrthicTriangle.stage.addEventListener(Event.RESIZE, reposition);
 
-    h1.x = 100; h1.y = 100;
-    h2.x = 200; h2.y = 120;
-    h3.x = 153; h3.y = 180;
-    showHeights.y = 10;
-    minPerimeterLabel.y = 40;
-    currentPerimeterLabel.y = 70;
+    for (w in [h1, h2, h3, h4, h5, h6, showHeights,
+         minPerimeterLabel, currentPerimeterLabel])
+      addChild(w);
 
-    reposition(null);
+    var w = OrthicTriangle.stage.stageWidth;
+    var h = OrthicTriangle.stage.stageHeight;
+
+    h1.x = w * 0.1;
+    h1.y = h * 0.1;
+    h2.x = w * 0.7;
+    h2.y = h * 0.2;
+    h3.x = w * 0.5;
+    h3.y = h * 0.7;
+
+    reposition();
+    minPerimeter = calculateMaxPerimeter();
     updateInnerTri();
     draw(graphics);
   }
 
-  function maxWidth(list:Array<Dynamic>) {
-    var max:Float = 0;
-
-    for (w in list)
-      if (w.width > max)
-        max = w.width;
-
-    return max;
-  }
-
-  public function reposition(e) {
+  public function reposition(?e:Event = null) {
     var width = OrthicTriangle.stage.stageWidth;
     var height = OrthicTriangle.stage.stageHeight;
-    //var max = maxWidth([maxPerimeterLabel, showHeights, currentPerimeterLabel]);
     var max = 300;
     minPerimeterLabel.x = width - max - 10;
+    minPerimeterLabel.y = 40;
     showHeights.x = width - max - 10;
+    showHeights.y = 10;
     currentPerimeterLabel.x = width - max - 10;
+    currentPerimeterLabel.y = 70;
   }
 
   function updateInnerTri() {
@@ -141,29 +122,45 @@ class OrthicTriangle extends Sprite
     p = u.plus(v.minus(u).mult(0.5));
     h6.x = p.x;
     h6.y = p.y;
+
+    calculatePerimeter();
   }
 
   public function onOutterMove(e:HandleEvent) {
     e.target.x = e.x;
     e.target.y = e.y;
-    minPerimeter = 0;
+    minPerimeter = calculateMaxPerimeter();
     updateInnerTri();
     draw(graphics);
+  }
+
+  function calculateMaxPerimeter() {
+    var v1 = new Vector(h1.x, h1.y);
+    var v2 = new Vector(h2.x, h2.y);
+    var v3 = new Vector(h3.x, h3.y);
+    var t = new Triangle(v1, v2, v3);
+    return t.perimeter();
   }
 
   public function redraw(e) {
     draw(graphics);
   }
 
-  function calculateAndShowPerimeter() {
-    var u = new Vector(h4.x, h4.y);
-    var v = new Vector(h5.x, h5.y);
-    var w = new Vector(h6.x, h6.y);
-    var p = u.length() + v.length() + w.length();
-    if (minPerimeter < p)
+  function innerMoved(e) {
+    calculatePerimeter();
+    draw(graphics);
+  }
+
+  function calculatePerimeter() {
+    var v1 = new Vector(h4.x, h4.y);
+    var v2 = new Vector(h5.x, h5.y);
+    var v3 = new Vector(h6.x, h6.y);
+    var t = new Triangle(v1, v2, v3);
+    var p = t.perimeter();
+    if (minPerimeter > p)
       minPerimeter = p;
-    minPerimeterLabel.text = "Perímetro mínimo: " + minPerimeter;
-    currentPerimeterLabel.text = "Perímetro atual: " + p;
+    minPerimeterLabel.text = "Perímetro mínimo: " + Math.round(minPerimeter * 10) / 10;
+    currentPerimeterLabel.text = "Perímetro atual: " + Math.round(p * 10) / 10;
   }
 
   public function draw(g:Graphics) {
@@ -194,8 +191,12 @@ class OrthicTriangle extends Sprite
       g.moveTo(h3.x, h3.y);
       g.lineTo(h[2].x, h[2].y);
     }
+  }
 
-    calculateAndShowPerimeter();
+  static function main() {
+    stage.align = StageAlign.TOP_LEFT;
+    stage.scaleMode = StageScaleMode.NO_SCALE;
+    flash.Lib.current.addChild(new OrthicTriangle());
   }
 }
 
