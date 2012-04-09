@@ -18,3 +18,10 @@ e então basta rodar _make_ na raiz do projeto para compilar todos os exemplos.
 
 Caso não queira utilizar o programa make, você pode ver como o programa é
 compilado observando os arquivos Makefile de cada projeto.
+
+Executando os programas
+-----------------------
+
+Para executar os programas basta ter instalado o FlashPlayer e abrir os
+arquivos que terminam em .swf no seu browser! Esses arquivos se encontram nas
+suas respectivas pastas após uma compilação bem sucedida.
