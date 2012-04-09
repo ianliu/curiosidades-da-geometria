@@ -10,11 +10,25 @@ class Triangle
     this.v3 = v3;
   }
 
+  public function perimeter() {
+    var u = v2.minus(v1);
+    var v = v3.minus(v2);
+    var w = v1.minus(v3);
+    return u.length() + v.length() + w.length();
+  }
+
   public function medians() {
     var m1 = v2.plus(v3.minus(v2).mult(0.5));
     var m2 = v3.plus(v1.minus(v3).mult(0.5));
     var m3 = v1.plus(v2.minus(v1).mult(0.5));
     return [m1, m2, m3];
+  }
+
+  public function heihgts() {
+    var h1 = v2.plus(v3.minus(v2).proj(v1.minus(v2)));
+    var h2 = v3.plus(v1.minus(v3).proj(v2.minus(v3)));
+    var h3 = v1.plus(v2.minus(v1).proj(v3.minus(v1)));
+    return [h1, h2, h3];
   }
 
   public function barycenter() {

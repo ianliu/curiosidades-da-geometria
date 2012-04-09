@@ -1,1 +1,3 @@
-setf haxe
+if &ft == ""
+  setf haxe
+endif

@@ -3,9 +3,19 @@ class Vector
 {
   public var x:Float;
   public var y:Float;
+
   public function new(x:Float, y:Float) {
     this.x = x;
     this.y = y;
+  }
+
+  public inline function mag2() {
+    return x*x + y*y;
+  }
+
+  public inline function proj(v:Vector) {
+    var s = dot(v) / mag2();
+    return mult(s);
   }
 
   public inline function dot(v:Vector) {
