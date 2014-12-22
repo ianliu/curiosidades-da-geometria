@@ -12,7 +12,7 @@ HTML5 = $(PROGRAMS).html
 all: flash html5
 
 $(FLASH): $(linha_de_euler_SOURCES)
-	$(HAXE) -main $(linha_de_euler_MAIN) $(AM_HXFLAGS) $(HXFLAGS) -swf9 $@ -swf-header 400:300:30:FFFFFF
+	$(HAXE) -main $(linha_de_euler_MAIN) $(AM_HXFLAGS) $(HXFLAGS) -swf $@ -swf-header 400:300:30:FFFFFF
 
 # TODO: Learn to compile this
 $(HTML5):

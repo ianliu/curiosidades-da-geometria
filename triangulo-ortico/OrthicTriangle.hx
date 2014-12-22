@@ -29,8 +29,6 @@ import flash.events.Event;
 
 class OrthicTriangle extends Sprite
 {
-  public static var stage = flash.Lib.current.stage;
-
   var minPerimeter:Float;
 
   // Triangulo de fora
@@ -70,14 +68,14 @@ class OrthicTriangle extends Sprite
     h5.addEventListener("move", innerMoved);
     h6.addEventListener("move", innerMoved);
     showHeights.addEventListener("toggled", redraw);
-    OrthicTriangle.stage.addEventListener(Event.RESIZE, reposition);
+    stage.addEventListener(Event.RESIZE, reposition);
 
     for (w in [h1, h2, h3, h4, h5, h6, showHeights,
          minPerimeterLabel, currentPerimeterLabel])
       addChild(w);
 
-    var w = OrthicTriangle.stage.stageWidth;
-    var h = OrthicTriangle.stage.stageHeight;
+    var w = stage.stageWidth;
+    var h = stage.stageHeight;
 
     h1.x = w * 0.1;
     h1.y = h * 0.1;
@@ -93,8 +91,8 @@ class OrthicTriangle extends Sprite
   }
 
   public function reposition(?e:Event = null) {
-    var width = OrthicTriangle.stage.stageWidth;
-    var height = OrthicTriangle.stage.stageHeight;
+    var width = stage.stageWidth;
+    var height = stage.stageHeight;
     var max = 300;
     minPerimeterLabel.x = width - max - 10;
     minPerimeterLabel.y = 40;
@@ -194,8 +192,8 @@ class OrthicTriangle extends Sprite
   }
 
   static function main() {
-    stage.align = StageAlign.TOP_LEFT;
-    stage.scaleMode = StageScaleMode.NO_SCALE;
+    flash.Lib.current.stage.align = StageAlign.TOP_LEFT;
+    flash.Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
     flash.Lib.current.addChild(new OrthicTriangle());
   }
 }

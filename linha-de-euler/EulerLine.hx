@@ -30,11 +30,10 @@ import flash.events.Event;
 class EulerLine
 extends Sprite
 {
-  public static var stage = flash.Lib.current.stage;
-
   static function main() {
-    stage.align = StageAlign.TOP_LEFT;
-    stage.scaleMode = StageScaleMode.NO_SCALE;
+    var s = flash.Lib.current.stage;
+    s.align = StageAlign.TOP_LEFT;
+    s.scaleMode = StageScaleMode.NO_SCALE;
     flash.Lib.current.addChild(new EulerLine());
   }
 
@@ -75,7 +74,9 @@ extends Sprite
     btn1.addEventListener("toggled", redraw);
     btn2.addEventListener("toggled", redraw);
     btn3.addEventListener("toggled", redraw);
-    EulerLine.stage.addEventListener(Event.RESIZE, reposition);
+
+    var st = flash.Lib.current.stage;
+    st.addEventListener(Event.RESIZE, reposition);
 
     h1.x = 100;
     h1.y = 100;
@@ -93,8 +94,9 @@ extends Sprite
   }
 
   public function reposition(e) {
-    var width = EulerLine.stage.stageWidth;
-    var height = EulerLine.stage.stageHeight;
+    var s = flash.Lib.current.stage;
+    var width = s.stageWidth;
+    var height = s.stageHeight;
     label.y = height-label.height;
     label.x = (width-label.width)/2;
     var max = (btn1.width > btn2.width)? btn1.width:btn2.width;

@@ -27,8 +27,6 @@ class HandleMoveEvent extends Event
 
 class Handle extends Sprite
 {
-  static var stage = flash.Lib.current.stage;
-
   private var constrainData:ConstrainData;
 
   public function new(color:Int = 0xCCCCCC, size:Int = 8) {
@@ -85,12 +83,14 @@ class Handle extends Sprite
   }
 
   private function onPress(e) {
-    Handle.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-    Handle.stage.addEventListener(MouseEvent.MOUSE_UP, onRelease);
+    var s = flash.Lib.current.stage;
+    s.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+    s.addEventListener(MouseEvent.MOUSE_UP, onRelease);
   }
 
   private function onRelease(e) {
-    Handle.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-    Handle.stage.removeEventListener(MouseEvent.MOUSE_UP, onRelease);
+    var s = flash.Lib.current.stage;
+    s.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+    s.removeEventListener(MouseEvent.MOUSE_UP, onRelease);
   }
 }
